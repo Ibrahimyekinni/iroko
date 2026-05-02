@@ -315,6 +315,10 @@ function renderActiveStory() {
 }
 
 function renderLibrary() {
+  if (library.length === 0) {
+    librarySection.style.display = 'none';
+    return;
+  }
   librarySection.style.display = 'block';
   libraryCardsContainer.innerHTML = '';
 
@@ -327,6 +331,14 @@ function renderLibrary() {
       renderActiveStory();
     };
 
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'card-delete-btn';
+    deleteBtn.innerHTML = '×';
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
+      openDeleteModal(story.id);
+    };
+
     const header = document.createElement('div');
     header.className = 'library-card-header';
     header.innerHTML = `<strong>${story.speaker_label}</strong> <span class="date">${story.date}</span>`;
@@ -336,6 +348,7 @@ function renderLibrary() {
     const lang = story.detected_languages.join(', ');
     meta.innerHTML = `<span>${lang}</span> <span>${story.entities.length} entities</span>`;
 
+    card.appendChild(deleteBtn);
     card.appendChild(header);
     card.appendChild(meta);
     libraryCardsContainer.appendChild(card);
@@ -346,5 +359,65 @@ function updateStats() {
   const totalEntities = library.reduce((sum, story) => sum + (story.entities ? story.entities.length : 0), 0);
   statsCounter.textContent = `${library.length} stories • ${totalEntities} entities preserved`;
 }
+
+// Modal Logic
+let storyToDelete = null;
+
+function openDeleteModal(storyId) {
+  storyToDelete = storyId;
+  const story = library.find(s => s.id === storyId);
+  if (!story) return;
+  
+  document.getElementById('modal-speaker-name').textContent = story.speaker_label;
+  const modal = document.getElementById('delete-modal');
+  modal.style.display = 'flex';
+  setTimeout(() => modal.classList.add('open'), 10);
+}
+
+function closeDeleteModal() {
+  const modal = document.getElementById('delete-modal');
+  modal.classList.remove('open');
+  setTimeout(() => {
+    modal.style.display = 'none';
+    storyToDelete = null;
+  }, 200);
+}
+
+document.getElementById('modal-btn-keep').addEventListener('click', closeDeleteModal);
+
+document.getElementById('modal-btn-forget').addEventListener('click', () => {
+  if (!storyToDelete) return;
+  
+  library = library.filter(s => s.id !== storyToDelete);
+  try {
+    localStorage.setItem('iroko_library', JSON.stringify(library));
+  } catch (e) {
+    console.error("Failed to save after deletion", e);
+  }
+  
+  if (activeStoryId === storyToDelete) {
+    activeStoryId = null;
+    document.getElementById('results').style.display = 'none';
+  }
+  
+  updateStats();
+  renderLibrary();
+  if (activeStoryId) {
+    renderActiveStory();
+  }
+  closeDeleteModal();
+});
+
+document.getElementById('delete-modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('delete-modal')) {
+    closeDeleteModal();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('delete-modal').classList.contains('open')) {
+    closeDeleteModal();
+  }
+});
 
 initLibrary();
