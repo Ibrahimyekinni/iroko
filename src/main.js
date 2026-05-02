@@ -89,7 +89,25 @@ async function handleFile(file) {
     }
 
     const data = await callGemini(base64Audio, mimeType, apiKey);
-    renderResults(data);
+    
+    const newStory = {
+      id: Date.now().toString(),
+      speaker_label: speakerInput.value.trim() || `Untitled Elder #${library.length + 1}`,
+      date: new Date().toLocaleDateString(),
+      transcript: data.transcript,
+      detected_languages: data.detected_languages || [],
+      entities: data.entities || [],
+      original_filename: file.name
+    };
+
+    library.push(newStory);
+    localStorage.setItem('iroko_library', JSON.stringify(library));
+    activeStoryId = newStory.id;
+    speakerInput.value = '';
+
+    renderLibrary();
+    renderActiveStory();
+    updateStats();
   } catch (error) {
     console.error(error);
     showError(error.message || 'An error occurred during processing.');
@@ -176,14 +194,47 @@ Analyze the provided audio and return a JSON object with the exact following sch
   return JSON.parse(rawText);
 }
 
-function renderResults(data) {
+const speakerInput = document.getElementById('speaker-input');
+const statsCounter = document.getElementById('stats-counter');
+const librarySection = document.getElementById('library-section');
+const libraryCardsContainer = document.getElementById('library-cards-container');
+const clearLibraryBtn = document.getElementById('clear-library');
+
+let library = JSON.parse(localStorage.getItem('iroko_library')) || [];
+let activeStoryId = null;
+
+function initLibrary() {
+  if (library.length > 0) {
+    activeStoryId = library[library.length - 1].id;
+    renderLibrary();
+    renderActiveStory();
+  }
+  updateStats();
+}
+
+clearLibraryBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  if(confirm("Clear the entire library?")) {
+    library = [];
+    localStorage.removeItem('iroko_library');
+    activeStoryId = null;
+    results.style.display = 'none';
+    librarySection.style.display = 'none';
+    updateStats();
+  }
+});
+
+function renderActiveStory() {
+  const activeStory = library.find(s => s.id === activeStoryId);
+  if (!activeStory) return;
+
   // Clear previous
   metaInfo.innerHTML = '';
   entitiesContent.innerHTML = '';
   
   // Render languages
-  if (data.detected_languages && data.detected_languages.length > 0) {
-    data.detected_languages.forEach(lang => {
+  if (activeStory.detected_languages && activeStory.detected_languages.length > 0) {
+    activeStory.detected_languages.forEach(lang => {
       const badge = document.createElement('div');
       badge.className = 'badge';
       badge.textContent = lang;
@@ -192,12 +243,12 @@ function renderResults(data) {
   }
 
   // Render transcript
-  transcriptText.textContent = data.transcript || 'No transcript generated.';
+  transcriptText.textContent = activeStory.transcript || 'No transcript generated.';
 
   // Render entities
-  if (data.entities && data.entities.length > 0) {
+  if (activeStory.entities && activeStory.entities.length > 0) {
     // Group entities by type
-    const grouped = data.entities.reduce((acc, entity) => {
+    const grouped = activeStory.entities.reduce((acc, entity) => {
       const type = entity.type || 'Other';
       if (!acc[type]) acc[type] = [];
       acc[type].push(entity);
@@ -251,3 +302,38 @@ function renderResults(data) {
   results.style.display = 'block';
   dropZone.style.display = 'block'; // Show again for more files
 }
+
+function renderLibrary() {
+  librarySection.style.display = 'block';
+  libraryCardsContainer.innerHTML = '';
+
+  library.forEach(story => {
+    const card = document.createElement('div');
+    card.className = `library-card ${story.id === activeStoryId ? 'active' : ''}`;
+    card.onclick = () => {
+      activeStoryId = story.id;
+      renderLibrary();
+      renderActiveStory();
+    };
+
+    const header = document.createElement('div');
+    header.className = 'library-card-header';
+    header.innerHTML = `<strong>${story.speaker_label}</strong> <span class="date">${story.date}</span>`;
+    
+    const meta = document.createElement('div');
+    meta.className = 'library-card-meta';
+    const lang = story.detected_languages.join(', ');
+    meta.innerHTML = `<span>${lang}</span> <span>${story.entities.length} entities</span>`;
+
+    card.appendChild(header);
+    card.appendChild(meta);
+    libraryCardsContainer.appendChild(card);
+  });
+}
+
+function updateStats() {
+  const totalEntities = library.reduce((sum, story) => sum + (story.entities ? story.entities.length : 0), 0);
+  statsCounter.textContent = `${library.length} stories • ${totalEntities} entities preserved`;
+}
+
+initLibrary();
