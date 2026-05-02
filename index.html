@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="top-accent-bar"></div>
+    <div id="app">
+      <header>
+        <h1 class="hero-title">Iroko</h1>
+        <p class="subtitle hero-tagline">When an elder speaks, a library lives.</p>
+      </header>
+
+      <div id="error-msg"></div>
+
+      <div id="drop-zone">
+        <div class="upload-icon">🎧</div>
+        <h2>Drop your audio file here</h2>
+        <p class="subtitle">Supports MP3, WAV, M4A, etc.</p>
+        <input type="file" id="file-input" accept="audio/*" style="display: none;">
+      </div>
+
+      <div id="loading">
+        <div class="spinner"></div>
+        <h3>Analyzing Audio...</h3>
+        <p class="subtitle">Extracting transcript and detecting entities</p>
+      </div>
+
+      <div id="results">
+        <div class="transcript-container">
+          <div class="transcript-header">
+            <span class="transcript-label">ORAL HISTORY</span>
+            <div class="meta-info" id="meta-info">
+              <!-- Badges for languages will be injected here -->
+            </div>
+          </div>
+          <div id="transcript-text"></div>
+        </div>
+
+        <div class="entities-container">
+          <h3 class="section-title">Detected Entities</h3>
+          <div id="entities-content">
+            <!-- Entity groups will be injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
