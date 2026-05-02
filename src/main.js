@@ -102,6 +102,7 @@ async function handleFile(file) {
 
     library.push(newStory);
     localStorage.setItem('iroko_library', JSON.stringify(library));
+    console.log("Library length after save:", library.length);
     activeStoryId = newStory.id;
     speakerInput.value = '';
 
@@ -200,11 +201,21 @@ const librarySection = document.getElementById('library-section');
 const libraryCardsContainer = document.getElementById('library-cards-container');
 const clearLibraryBtn = document.getElementById('clear-library');
 
-let library = JSON.parse(localStorage.getItem('iroko_library')) || [];
+let library = [];
+try {
+  const stored = localStorage.getItem('iroko_library');
+  if (stored) {
+    library = JSON.parse(stored);
+  }
+} catch (e) {
+  console.error("Failed to parse localStorage:", e);
+}
+console.log("Library loaded on start:", library.length);
+
 let activeStoryId = null;
 
 function initLibrary() {
-  if (library.length > 0) {
+  if (library && library.length > 0) {
     activeStoryId = library[library.length - 1].id;
     renderLibrary();
     renderActiveStory();

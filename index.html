@@ -17,8 +17,11 @@
 
       <div id="error-msg"></div>
 
-      <div id="dropzone-container">
-        <input type="text" id="speaker-input" class="speaker-input" placeholder="Whose story is this?">
+      <div id="dropzone-container" class="dropzone-container">
+        <div class="speaker-input-wrapper">
+          <label for="speaker-input" class="speaker-label">Whose story is this? (optional)</label>
+          <input type="text" id="speaker-input" class="speaker-input" placeholder="e.g. Grandma Rose">
+        </div>
         <div id="drop-zone">
           <div class="upload-icon">🎧</div>
           <h2>Drop your audio file here</h2>
