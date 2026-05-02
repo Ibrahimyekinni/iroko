@@ -65,6 +65,21 @@
         <a href="#" id="clear-library" class="clear-link">Clear library</a>
       </footer>
     </div>
+
+    <!-- Delete Modal -->
+    <div id="delete-modal" class="modal-backdrop">
+      <div class="modal-card">
+        <h3 class="modal-title">Forget this story?</h3>
+        <p class="modal-body">
+          You're about to remove <strong id="modal-speaker-name"></strong>'s story from your library. The transcript, the people they remembered, the places they named, and the lessons they passed on will be erased. This cannot be undone — and unless this story is recorded elsewhere, this knowledge will be lost again.
+        </p>
+        <div class="modal-actions">
+          <button id="modal-btn-keep" class="btn-primary">Keep it</button>
+          <button id="modal-btn-forget" class="btn-secondary">Forget</button>
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
