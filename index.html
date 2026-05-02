@@ -12,21 +12,32 @@
       <header>
         <h1 class="hero-title">Iroko</h1>
         <p class="subtitle hero-tagline">When an elder speaks, a library lives.</p>
+        <p class="stats-counter" id="stats-counter">0 stories • 0 entities preserved</p>
       </header>
 
       <div id="error-msg"></div>
 
-      <div id="drop-zone">
-        <div class="upload-icon">🎧</div>
-        <h2>Drop your audio file here</h2>
-        <p class="subtitle">Supports MP3, WAV, M4A, etc.</p>
-        <input type="file" id="file-input" accept="audio/*" style="display: none;">
+      <div id="dropzone-container">
+        <input type="text" id="speaker-input" class="speaker-input" placeholder="Whose story is this?">
+        <div id="drop-zone">
+          <div class="upload-icon">🎧</div>
+          <h2>Drop your audio file here</h2>
+          <p class="subtitle">Supports MP3, WAV, M4A, etc.</p>
+          <input type="file" id="file-input" accept="audio/*" style="display: none;">
+        </div>
       </div>
 
       <div id="loading">
         <div class="spinner"></div>
         <h3>Analyzing Audio...</h3>
         <p class="subtitle">Extracting transcript and detecting entities</p>
+      </div>
+
+      <div id="library-section" style="display: none;">
+        <h3 class="section-title">Library</h3>
+        <div id="library-cards-container" class="library-scroll">
+          <!-- Library cards injected here -->
+        </div>
       </div>
 
       <div id="results">
@@ -47,6 +58,9 @@
           </div>
         </div>
       </div>
+      <footer class="app-footer">
+        <a href="#" id="clear-library" class="clear-link">Clear library</a>
+      </footer>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
