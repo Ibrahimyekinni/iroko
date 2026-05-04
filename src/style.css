@@ -227,6 +227,8 @@ header {
 
 .transcript-header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
@@ -370,20 +372,16 @@ header {
 /* Library */
 .library-scroll {
   display: flex;
+  flex-direction: row;
   gap: 1rem;
   overflow-x: auto;
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  padding-bottom: 0.75rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
 .library-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-.library-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  display: none;
 }
 
 .library-card {
@@ -450,7 +448,7 @@ header {
   background: transparent;
   border: none;
   color: var(--text-secondary);
-  opacity: 0.3;
+  opacity: 0.6;
   cursor: pointer;
   font-size: 1.5rem;
   line-height: 1;
@@ -463,6 +461,12 @@ header {
 .card-delete-btn:active {
   opacity: 1;
   color: #ff5252;
+}
+
+@media (max-width: 768px) {
+  .card-delete-btn {
+    opacity: 1;
+  }
 }
 
 /* Modal */
@@ -618,10 +622,8 @@ header {
     margin-bottom: 1.5rem;
   }
 
-  /* Library Cards: vertical stack */
+  /* Library Cards: horizontal scroll */
   .library-scroll {
-    flex-direction: column;
-    overflow-x: hidden;
     gap: 1rem;
   }
 
@@ -656,5 +658,9 @@ header {
   
   .modal-actions {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+  .modal-actions button {
+    width: 100%;
   }
 }

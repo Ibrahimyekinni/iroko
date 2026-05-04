@@ -367,4 +367,29 @@ Goal: build the cross-story knowledge graph that makes Iroko irreplaceable.
 
 ---
 
+## 16. Problem hypotheses (as of May 2026)
+
+Defined during post-hackathon strategy session. These are hypotheses, not answers.
+The research session (see prompt in Section 17) validates which one is true.
+
+### Hypothesis A — The Family
+Iroko is for diaspora families who want to document an elder's stories before
+it's too late, but never do it because there's no simple tool that turns a voice
+recording into something structured and permanent — so when the elder dies,
+the knowledge dies with them.
+
+### Hypothesis B — The Researcher
+Iroko is for African studies researchers and oral historians who conduct dozens
+of interviews but spend weeks manually transcribing and tagging them — so
+fieldwork that should take days takes months, and the knowledge stays locked
+in audio files nobody can search or cite.
+
+### What the research session needs to answer
+- Which hypothesis describes a person with real, urgent, recurring pain?
+- Which person is more likely to pay for a solution — and how much?
+- What tools already exist for each person, and where do those tools fall short?
+- Are there adjacent problems or customer segments we haven't considered?
+
+---
+
 _End of project bible. Update this file whenever a significant decision is made._
